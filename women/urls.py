@@ -1,6 +1,8 @@
+from django.urls import path
 
-def main():
-    pass
+from .views import *
 
-if __name__ == '__main__':
-    main()
+urlpatterns = [
+    path('', index),
+    path('cats', categories)
+]
