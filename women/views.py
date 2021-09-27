@@ -2,11 +2,20 @@ import datetime
 
 from django.http import HttpResponse, HttpResponseNotFound
 # Create your views here.
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from .models import *
+
+menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
 
 
-def index(requset):  # HttpRequest
-    return HttpResponse('Страница приложения women')
+def index(request):  # HttpRequest
+    posts = Women.objects.all()
+    return render(request, 'women/index.html',
+                  {'posts': posts, 'menu': menu, 'title': 'Главная страница'})
+
+
+def about(request):
+    return render(request, 'women/about.html', {'menu': menu, 'title': 'О Сайте'})
 
 
 def categories(req, catid):
