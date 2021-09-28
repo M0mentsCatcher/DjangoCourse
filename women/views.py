@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 # Create your views here.
 from django.shortcuts import render
 
@@ -12,12 +12,17 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
 
 def index(request):  # HttpRequest
     posts = Women.objects.all()
+    cats = Category.objects.all()
+
     context = {
         'posts': posts,
+        'cats': cats,
         'menu': menu,
-        'title': 'Главная страница'
+        'title': 'Главная страница',
+        'cat_selected': 0,
+
     }
-    return render(request, 'women/index.html', context=context)
+    return render(request, 'women/index.html', context=context, )
 
 
 def about(request):
@@ -43,3 +48,21 @@ def page_not_found(request, exception):
 
 def show_post(request, post_id):
     return HttpResponse(f'Отображение статьи с id = {post_id}')
+
+
+def show_category(request, cat_id):
+    posts = Women.objects.filter(cat_id=cat_id)
+    cats = Category.objects.all()
+
+    if len(posts) == 0:
+        raise Http404()
+
+    context = {
+        'posts': posts,
+        'cats': cats,
+        'menu': menu,
+        'title': 'Отображение рубрики',
+        'cat_selected': cat_id,
+
+    }
+    return render(request, 'women/index.html', context=context, )
